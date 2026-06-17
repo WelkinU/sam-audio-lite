@@ -1,0 +1,30 @@
+[project]
+name = "sam-audio-lite"
+version = "0.1.0"
+description = "Efficient Gradio wrapper around Meta's SAM-Audio (text + span prompting, low-VRAM)."
+requires-python = ">=3.11"
+dependencies = [
+    "torch",
+    "torchaudio",
+    "torchvision",
+    "sam-audio",
+    "gradio>=5.0.0",
+    "pyyaml",
+    "huggingface-hub",
+    "triton-windows; sys_platform == 'win32'",
+]
+
+# Research/testing app, not a distributable package.
+[tool.uv]
+package = false
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu128" }
+torchaudio = { index = "pytorch-cu128" }
+torchvision = { index = "pytorch-cu128" }
+sam-audio = { git = "https://github.com/facebookresearch/sam-audio.git" }
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true

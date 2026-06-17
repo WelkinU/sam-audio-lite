@@ -1,0 +1,23 @@
+# Python / uv
+.venv/
+.env/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# Model checkpoints (downloaded from Hugging Face)
+checkpoints/*
+!checkpoints/.gitkeep
+
+#test files
+test_files/*
+
+# Generated audio / temp
+*.wav
+outputs/
+sam_install.log
+
+# OS / editor
+.DS_Store
+Thumbs.db

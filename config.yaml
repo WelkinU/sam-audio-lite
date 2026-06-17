@@ -1,0 +1,33 @@
+# Configuration for sam-audio-lite.
+# Controls which model is loaded, precision, which heavy components are stripped
+# to save VRAM, inference behaviour, and audio chunking for long clips.
+
+model:
+  # One of: sam-audio-small, sam-audio-base, sam-audio-large, sam-audio-base-tv
+  # (also valid: sam-audio-small-tv, sam-audio-large-tv if downloaded).
+  name: sam-audio-base
+  device: auto              # auto | cuda | cpu
+  dtype: bfloat16           # bfloat16 | float16 | float32
+
+# Skip building stripped sub-models entirely (no download, no VRAM, no RAM).
+# Vision + rankers + span predictor are not needed for plain text/span prompting.
+optimization:
+  strip_vision_encoder: true   # saves VRAM; disables visual prompting
+  strip_visual_ranker: true    # ImageBind ranker (~4.5 GB download avoided)
+  strip_text_ranker: true      # Judge + CLAP ensemble (text reranking)
+  strip_span_predictor: true   # pe-a-frame-large; only needed for predict_spans
+
+inference:
+  # Auto-predict time spans from the prompt. Requires strip_span_predictor: false.
+  # Manual spans (the UI table) work regardless and do NOT need the span predictor.
+  predict_spans: false
+  reranking_candidates: 1      # >1 needs rankers (do not strip them)
+
+# Long audio is split into overlapping chunks and crossfade-merged to avoid OOM.
+chunking:
+  enabled: true
+  max_duration_without_chunking: 60  # seconds; shorter clips run in one pass
+  chunk_duration: 30                 # seconds per chunk
+  overlap_duration: 2                # seconds of crossfade between chunks
+
+
