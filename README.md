@@ -55,7 +55,7 @@ cd sam-audio-lite
 # Install uv if you don't have it: https://docs.astral.sh/uv/
 uv sync
 
-# Save your HuggingFace token (one-time)
+# Save your HuggingFace token (one-time), or use "huggingface-cli login"
 uv run python scripts/setup_hf_token.py
 
 # Launch the app
@@ -82,9 +82,9 @@ optimization:
   strip_text_ranker: true
   strip_span_predictor: true   # set false to enable predict_spans
 
-chunking:
+chunking: #process audio in chunks to lower VRAM usage for long audio segments
   enabled: true
-  max_duration_without_chunking: 60  # seconds
-  chunk_duration: 30
-  overlap_duration: 2
+  max_duration_without_chunking: 60   # seconds
+  chunk_duration: 30                  # seconds, lower this value to lower VRAM usage
+  overlap_duration: 2                 # crossfade duration in seconds
 ```

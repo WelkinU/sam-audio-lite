@@ -5,7 +5,7 @@
 model:
   # One of: sam-audio-small, sam-audio-base, sam-audio-large, sam-audio-base-tv
   # (also valid: sam-audio-small-tv, sam-audio-large-tv if downloaded).
-  name: sam-audio-base
+  name: sam-audio-base      # only for running headless (Gradio GUI will override this)
   device: auto              # auto | cuda | cpu
   dtype: bfloat16           # bfloat16 | float16 | float32
 
