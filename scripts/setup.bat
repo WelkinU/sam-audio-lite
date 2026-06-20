@@ -1,6 +1,9 @@
 @echo off
 setlocal EnableDelayedExpansion
 
+:: Change to the project root (one level up from this script's directory)
+cd /d "%~dp0\.."
+
 echo.
 echo ============================================================
 echo   sam-audio-lite -- Windows Setup

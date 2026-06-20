@@ -34,17 +34,11 @@ The SAM-Audio weights are gated on HuggingFace and require a token even for free
 
 ### Windows — automated setup
 
-```bat
-git clone https://github.com/your-org/sam-audio-lite
-cd sam-audio-lite
-scripts\setup.bat
-```
+Get the code locally then run `scripts\setup.bat`
 
-The script installs Git and [uv](https://docs.astral.sh/uv/) if missing, runs `uv sync` to create the virtual environment, then walks you through saving your HuggingFace token. Once done:
+The script installs Git and [uv](https://docs.astral.sh/uv/) if missing, runs `uv sync` to create the virtual environment, then walks you through saving your HuggingFace token.
 
-```bat
-uv run run_gradio.py
-```
+Once done, launch the Gradio GUI with `uv run run_gradio.py`
 
 ### Manual setup (Windows / Linux)
 
@@ -55,7 +49,7 @@ cd sam-audio-lite
 # Install uv if you don't have it: https://docs.astral.sh/uv/
 uv sync
 
-# Save your HuggingFace token (one-time), or use "huggingface-cli login"
+# Save your HuggingFace token (one-time)
 uv run python scripts/setup_hf_token.py
 
 # Launch the app
@@ -72,8 +66,9 @@ Edit `config.yaml` to change the model, device, or chunking behaviour:
 
 ```yaml
 model:
-  name: sam-audio-base   # sam-audio-small | sam-audio-base | sam-audio-large
-  device: auto           # auto | cuda | cpu
+  name: sam-audio-base  # sam-audio-small | sam-audio-base | sam-audio-large
+                        # sam-audio-small-tv | sam-audio-base-tv | sam-audio-large-tv
+  device: auto          # auto | cuda | cpu
   dtype: bfloat16
 
 optimization:
@@ -82,9 +77,9 @@ optimization:
   strip_text_ranker: true
   strip_span_predictor: true   # set false to enable predict_spans
 
-chunking: #process audio in chunks to lower VRAM usage for long audio segments
+chunking:
   enabled: true
-  max_duration_without_chunking: 60   # seconds
-  chunk_duration: 30                  # seconds, lower this value to lower VRAM usage
-  overlap_duration: 2                 # crossfade duration in seconds
+  max_duration_without_chunking: 60  # seconds
+  chunk_duration: 30
+  overlap_duration: 2
 ```
