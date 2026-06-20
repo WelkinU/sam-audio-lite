@@ -43,7 +43,6 @@ Once done, launch the Gradio GUI with `uv run run_gradio.py`
 ### Manual setup (Windows / Linux)
 
 ```bash
-git clone https://github.com/your-org/sam-audio-lite
 cd sam-audio-lite
 
 # Install uv if you don't have it: https://docs.astral.sh/uv/
