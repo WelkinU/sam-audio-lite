@@ -10,7 +10,9 @@ Low-VRAM friendly — the vision encoder, rankers, and span predictor are stripp
 
 - Python 3.11+
 - CUDA-capable GPU (recommended; CPU works but is slow)
+- **GTX 10xx / Pascal GPUs** (e.g. GTX 1070): this project pins PyTorch **CUDA 12.6** builds (`cu126`), which still support compute capability 6.1. Newer `cu128+` PyTorch wheels drop Pascal support.
 - A free [HuggingFace](https://huggingface.co) account with model access (see below)
+- **Windows only:** FFmpeg *full-shared* (with DLLs) for TorchCodec — `scripts\setup.bat` downloads this automatically into `tools/ffmpeg/`
 
 ---
 

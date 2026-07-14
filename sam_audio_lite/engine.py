@@ -23,6 +23,40 @@ Anchor = tuple[str, float, float]
 ProgressFn = Callable[[float, str], None]
 
 
+def _read_audio_file(path: str) -> tuple[torch.Tensor, int]:
+    """Load audio without TorchCodec.
+
+    ``torchaudio.load`` in 2.11+ delegates to TorchCodec, which is brittle on
+    Windows. We use ``soundfile`` (WAV/FLAC/OGG) with a ``pydub`` fallback.
+    """
+    try:
+        import soundfile as sf
+
+        data, sr = sf.read(path, dtype="float32", always_2d=True)
+        # soundfile: [samples, channels] -> torch: [channels, samples]
+        return torch.from_numpy(data.T.copy()), int(sr)
+    except Exception:
+        pass
+
+    try:
+        import numpy as np
+        from pydub import AudioSegment
+
+        seg = AudioSegment.from_file(path)
+        scale = float(1 << (8 * seg.sample_width - 1))
+        samples = np.array(seg.get_array_of_samples(), dtype=np.float32) / scale
+        if seg.channels > 1:
+            samples = samples.reshape(-1, seg.channels).mean(axis=1)
+        waveform = torch.from_numpy(samples).unsqueeze(0)
+        return waveform, seg.frame_rate
+    except Exception as exc:
+        raise RuntimeError(
+            f"Could not load audio file '{path}'. "
+            "Supported via soundfile: WAV, FLAC, OGG. "
+            "Other formats need FFmpeg on PATH (pydub fallback)."
+        ) from exc
+
+
 def _empty_cache() -> None:
     gc.collect()
     if torch.cuda.is_available():
@@ -212,7 +246,7 @@ class SamAudioEngine:
     # -- audio io ---------------------------------------------------------------
 
     def _load_audio(self, path: str) -> torch.Tensor:
-        waveform, sr = torchaudio.load(path)
+        waveform, sr = _read_audio_file(path)
         if sr != self.sample_rate:
             waveform = torchaudio.transforms.Resample(sr, self.sample_rate)(waveform)
         if waveform.shape[0] > 1:  # downmix to mono
@@ -221,8 +255,10 @@ class SamAudioEngine:
 
     # -- separation -------------------------------------------------------------
 
-    def _run(self, audio, description: str, anchors: list[Anchor] | None, predict_spans: bool):
+    def _run(self, audio: str | torch.Tensor, description: str, anchors: list[Anchor] | None, predict_spans: bool):
         """Run the model on a single audio input (path or tensor)."""
+        if isinstance(audio, str):
+            audio = self._load_audio(audio)
         batch_anchors = [list(anchors)] if anchors else None
         batch = self.processor(
             descriptions=[description],
@@ -274,7 +310,7 @@ class SamAudioEngine:
 
         if not use_chunking:
             pf(0.1, "Running model…")
-            target, residual = self._run(audio_path, description, anchors, predict_spans)
+            target, residual = self._run(waveform, description, anchors, predict_spans)
             pf(1.0, "Inference complete.")
             return self._as_2d(target), self._as_2d(residual), self.sample_rate
 

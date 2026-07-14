@@ -1,5 +1,6 @@
 # Python / uv
 .venv/
+tools/ffmpeg/
 .env/
 __pycache__/
 *.pyc

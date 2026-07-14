@@ -96,8 +96,18 @@ if errorlevel 1 (
     exit /b 1
 )
 
-:: ── Step 3: uv sync ──────────────────────────────────────────
-echo [3/4] Installing Python dependencies...
+:: ── Step 3: FFmpeg (Windows / TorchCodec) ───────────────────
+echo [3/5] Checking for FFmpeg shared libraries...
+powershell -ExecutionPolicy Bypass -File "%~dp0setup_ffmpeg.ps1"
+if errorlevel 1 (
+    echo.
+    echo  WARNING: FFmpeg shared setup failed. Audio-only mode may still work;
+    echo  visual / TV models need FFmpeg full-shared. Re-run:
+    echo    powershell -ExecutionPolicy Bypass -File scripts\setup_ffmpeg.ps1
+)
+
+:: ── Step 4: uv sync ──────────────────────────────────────────
+echo [4/5] Installing Python dependencies...
 echo       (This may take a few minutes on first run)
 echo.
 uv sync
@@ -108,9 +118,9 @@ if errorlevel 1 (
     exit /b 1
 )
 
-:: ── Step 4: HuggingFace login ────────────────────────────────
+:: ── Step 5: HuggingFace login ────────────────────────────────
 echo.
-echo [4/4] Setting up HuggingFace access...
+echo [5/5] Setting up HuggingFace access...
 echo.
 uv run python scripts/setup_hf_token.py
 if errorlevel 1 (
