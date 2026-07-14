@@ -70,7 +70,7 @@ model:
   name: sam-audio-base  # sam-audio-small | sam-audio-base | sam-audio-large
                         # sam-audio-small-tv | sam-audio-base-tv | sam-audio-large-tv
   device: auto          # auto | cuda | cpu
-  dtype: bfloat16
+  dtype: bfloat16       # float16 | float32
 
 optimization:
   strip_vision_encoder: true   # saves VRAM; disables visual prompting
