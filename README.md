@@ -38,7 +38,7 @@ The SAM-Audio weights are gated on HuggingFace and require a token even for free
 
 Get the code locally then run `scripts\setup.bat`
 
-The script installs Git and [uv](https://docs.astral.sh/uv/) if missing, runs `uv sync` to create the virtual environment, then walks you through saving your HuggingFace token.
+The script installs Git and [uv](https://docs.astral.sh/uv/) if missing, runs `uv sync` to create the virtual environment, then walks you through saving your HuggingFace token. Checks for ffmpeg.
 
 Once done, launch the Gradio GUI with `uv run run_gradio.py`
 
