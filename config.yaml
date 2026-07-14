@@ -7,7 +7,7 @@ model:
   # (also valid: sam-audio-small-tv, sam-audio-large-tv if downloaded).
   name: sam-audio-base      # only for running headless (Gradio GUI will override this)
   device: auto              # auto | cuda | cpu
-  dtype: bfloat16           # bfloat16 | float16 | float32
+  dtype: float16           # bfloat16 | float16 | float32
 
 # Skip building stripped sub-models entirely (no download, no VRAM, no RAM).
 # Vision + rankers + span predictor are not needed for plain text/span prompting.

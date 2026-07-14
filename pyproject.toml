@@ -4,9 +4,10 @@ version = "0.1.0"
 description = "Efficient Gradio wrapper around Meta's SAM-Audio (text + span prompting, low-VRAM)."
 requires-python = ">=3.11"
 dependencies = [
-    "torch",
-    "torchaudio",
-    "torchvision",
+    "torch>=2.11,<2.12",
+    "torchaudio>=2.11,<2.12",
+    "torchvision>=0.26,<0.27",
+    "torchcodec>=0.14,<0.15",
     "sam-audio",
     "gradio>=5.0.0",
     "pyyaml",
@@ -19,12 +20,14 @@ dependencies = [
 package = false
 
 [tool.uv.sources]
-torch = { index = "pytorch-cu128" }
-torchaudio = { index = "pytorch-cu128" }
-torchvision = { index = "pytorch-cu128" }
+# CUDA 12.6 builds retain Pascal (GTX 10xx, sm_61) support; cu128+ drops it.
+torch = { index = "pytorch-cu126" }
+torchaudio = { index = "pytorch-cu126" }
+torchvision = { index = "pytorch-cu126" }
+torchcodec = { index = "pytorch-cu126" }
 sam-audio = { git = "https://github.com/facebookresearch/sam-audio.git" }
 
 [[tool.uv.index]]
-name = "pytorch-cu128"
-url = "https://download.pytorch.org/whl/cu128"
+name = "pytorch-cu126"
+url = "https://download.pytorch.org/whl/cu126"
 explicit = true
